@@ -67,7 +67,7 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoMapper, I
         String method = interfaceInfo.getMethod();
         // 创建时，参数不能为空
         if (add) {
-            ThrowUtils.throwIf(StringUtils.isAnyBlank(name, url, requestHeader,responseHeader,method), ErrorCode.PARAMS_ERROR);
+            ThrowUtils.throwIf(StringUtils.isAnyBlank(name, url, requestHeader,responseHeader,method), ErrorCode.PARAMS_ERROR,"缺少参数");
         }
         // 有参数则校验
         if(StringUtils.isNotBlank(name) && name.length() > 20)
@@ -78,18 +78,17 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoMapper, I
         {
             throw new BusinessException(ErrorCode.PARAMS_ERROR,"接口描述过长");
         }
-        if(StringUtils.isNotBlank(url) && url.length() > 20)
+        if(StringUtils.isNotBlank(url) && url.length() > 40)
         {
             throw new BusinessException(ErrorCode.PARAMS_ERROR,"接口url过长");
         }
-        //接口url格式问题
-        String pattern = "^\\\\/[a-zA-Z0-9_.\\\\/]+$";
-        //TODO 如何校验请求头和响应头
-        if(StringUtils.isNotBlank(requestHeader) && !Pattern.matches(pattern,url))
+        //TODO: 接口url格式问题
+        //String pattern = "^(?:http|https)://(?:localhost(?::\\d+)?|[-a-zA-Z0-9.]+\\.)+[a-zA-Z]{2,}(?:/[^/#?]+)*\\??(?:[^#]*#?)?$";
+        if(false)
         {
             throw new BusinessException(ErrorCode.PARAMS_ERROR,"接口url格式不合法");
         }
-
+        //TODO 如何校验请求头和响应头
         List<String> methodList = new ArrayList<>();
         methodList.add("POST");
         methodList.add("GET");

@@ -1,11 +1,11 @@
-import { AvatarDropdown, AvatarName, Footer, Question } from '@/components';
-import { LinkOutlined } from '@ant-design/icons';
-import { SettingDrawer } from '@ant-design/pro-components';
-import type { RunTimeLayoutConfig } from '@umijs/max';
-import { history, Link } from '@umijs/max';
-import { requestConfig } from './requestConfig';
+import {AvatarDropdown, AvatarName, Footer, Question} from '@/components';
+import {LinkOutlined} from '@ant-design/icons';
+import {SettingDrawer} from '@ant-design/pro-components';
+import type {RunTimeLayoutConfig} from '@umijs/max';
+import {history, Link} from '@umijs/max';
+import {requestConfig} from './requestConfig';
 import React from 'react';
-import { getLoginUserUsingGet } from '@/services/eeu/userController';
+import {getLoginUserUsingGet} from '@/services/eeu/userController';
 
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';

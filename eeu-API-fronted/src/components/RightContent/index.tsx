@@ -1,4 +1,4 @@
-import { QuestionCircleOutlined } from '@ant-design/icons';
+import {QuestionCircleOutlined} from '@ant-design/icons';
 import '@umijs/max';
 import React from 'react';
 

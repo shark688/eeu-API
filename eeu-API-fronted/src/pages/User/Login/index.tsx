@@ -1,26 +1,18 @@
-import { Footer } from '@/components';
-import { getFakeCaptcha } from '@/services/ant-design-pro/login';
+import {Footer} from '@/components';
 import {
   AlipayCircleOutlined,
   LockOutlined,
-  MobileOutlined,
   TaobaoCircleOutlined,
   UserOutlined,
   WeiboCircleOutlined,
 } from '@ant-design/icons';
-import {
-  LoginForm,
-  ProFormCaptcha,
-  ProFormCheckbox,
-  ProFormText,
-} from '@ant-design/pro-components';
+import {LoginForm, ProFormCheckbox, ProFormText,} from '@ant-design/pro-components';
 import {Helmet, history, Link, useModel} from '@umijs/max';
-import { Alert, message, Tabs } from 'antd';
+import {Alert, message, Tabs} from 'antd';
 import Settings from '../../../../config/defaultSettings';
-import React, { useState } from 'react';
-import { flushSync } from 'react-dom';
-import { createStyles } from 'antd-style';
-import { userLoginUsingPost } from '@/services/eeu/userController';
+import React, {useState} from 'react';
+import {createStyles} from 'antd-style';
+import {userLoginUsingPost} from '@/services/eeu/userController';
 
 const useStyles = createStyles(({ token }) => {
   return {
