@@ -1,7 +1,7 @@
 package com.zrd.eeuapiinterface.controller;
 
-import com.zrd.eeuapiinterface.model.User;
-import com.zrd.eeuapiinterface.util.SignUtils;
+import com.zrd.eeuapisdk.model.User;
+import com.zrd.eeuapisdk.util.SignUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 

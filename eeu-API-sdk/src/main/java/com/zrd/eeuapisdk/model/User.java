@@ -1,4 +1,4 @@
-package com.zrd.eeuapiinterface.model;
+package com.zrd.eeuapisdk.model;
 
 import lombok.Data;
 

@@ -1,17 +1,13 @@
-package com.zrd.eeuapiinterface.client;
+package com.zrd.eeuapisdk.client;
 
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.crypto.SignUtil;
-import cn.hutool.crypto.digest.DigestAlgorithm;
-import cn.hutool.crypto.digest.Digester;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
-import com.zrd.eeuapiinterface.model.User;
-import com.zrd.eeuapiinterface.util.SignUtils;
+import com.zrd.eeuapisdk.model.User;
+import com.zrd.eeuapisdk.util.SignUtils;
 
 import java.nio.charset.StandardCharsets;
-import java.security.DigestException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,7 +41,7 @@ public class EeuClient {
     public String getNameByPOST(String name)
     {
         //可以单独传入http参数，这样参数会自动做URL编码，拼接在URL中
-        HashMap<String, Object> paramMap = new HashMap<>();
+        HashMap<String, Object> paramMap = new HashMap();
         paramMap.put("name", name);
 
         String result= HttpUtil.post("http://localhost:8123/api/name/", paramMap);

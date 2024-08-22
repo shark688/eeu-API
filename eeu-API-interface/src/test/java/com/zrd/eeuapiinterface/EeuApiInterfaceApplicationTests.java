@@ -1,22 +1,26 @@
 package com.zrd.eeuapiinterface;
 
-import com.zrd.eeuapiinterface.client.EeuClient;
-import com.zrd.eeuapiinterface.model.User;
+
+import com.zrd.eeuapisdk.client.EeuClient;
+import com.zrd.eeuapisdk.model.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import javax.annotation.Resource;
 
 @SpringBootTest
 class EeuApiInterfaceApplicationTests {
 
+    @Resource
+    private EeuClient eeuClient;
     @Test
     void mainTest() {
-        String accessKey = "zrd";
-        String secretKey = "zrd";
-        EeuClient eeuClient = new EeuClient(accessKey,secretKey);
+        String name = eeuClient.getNameByGET("zrd");
         User user = new User();
         user.setUsername("zrd");
-        String result = eeuClient.getUsernameByPOST(user);
-        System.out.println(result);
+        String usernameByPOST = eeuClient.getUsernameByPOST(user);
+        System.out.println("result:" + name);
+        System.out.println(usernameByPOST);
     }
 
 }

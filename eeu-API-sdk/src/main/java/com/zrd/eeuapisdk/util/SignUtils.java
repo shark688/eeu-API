@@ -1,9 +1,7 @@
-package com.zrd.eeuapiinterface.util;
+package com.zrd.eeuapisdk.util;
 
 import cn.hutool.crypto.digest.DigestAlgorithm;
 import cn.hutool.crypto.digest.Digester;
-
-import java.util.Map;
 
 /**
  * 加密工具
@@ -11,7 +9,7 @@ import java.util.Map;
 public class SignUtils {
     /**
      * 加密算法
-     * @param hashMap
+     * @param body
      * @param secretKey
      * @return
      */

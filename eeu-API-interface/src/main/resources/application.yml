@@ -2,4 +2,7 @@ server:
   port: 8123
   servlet:
     context-path: /api
-
+zrd:
+  client:
+    access-key: zrd
+    secret-key: zrd
