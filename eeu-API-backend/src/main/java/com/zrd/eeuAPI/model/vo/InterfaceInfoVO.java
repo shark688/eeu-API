@@ -5,6 +5,7 @@ import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 接口视图
@@ -51,10 +52,24 @@ public class InterfaceInfoVO implements Serializable {
     private String method;
 
     /**
+     * 状态
+     */
+    private Integer status;
+
+    /**
      * 创建人
      */
     private Long userId;
 
+    /**
+     * 创建时间
+     */
+    private Date createTime;
+
+    /**
+     * 更新时间
+     */
+    private Date updateTime;
 
     /**
      * 包装类转对象

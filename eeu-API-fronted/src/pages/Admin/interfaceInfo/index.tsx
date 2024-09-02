@@ -16,10 +16,12 @@ import UpdateForm from './components/UpdateForm';
 import {
   addInterfaceInfoUsingPost,
   deleteInterfaceInfoUsingPost,
-  listInterfaceInfoByPageUsingPost, offlineInterfaceInfoUsingPost, onlineInterfaceInfoUsingPost,
+  listInterfaceInfoByPageUsingPost,
+  offlineInterfaceInfoUsingPost,
+  onlineInterfaceInfoUsingPost,
   updateInterfaceInfoUsingPost
 } from "@/services/eeu/interfaceInfoController";
-import CreateForm from "@/pages/Admin/interfaceInfo/components/CreateForm";
+import CreateForm from "@/pages/Admin/InterfaceInfo/components/CreateForm";
 
 
 const TableList: React.FC = () => {

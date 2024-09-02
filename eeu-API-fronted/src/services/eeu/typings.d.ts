@@ -169,12 +169,15 @@ declare namespace API {
   };
 
   type InterfaceInfoVO = {
+    createTime?: string;
     description?: string;
     id?: number;
     method?: string;
     name?: string;
     requestHeader?: string;
     responseHeader?: string;
+    status?: number;
+    updateTime?: string;
     url?: string;
     userId?: number;
   };
