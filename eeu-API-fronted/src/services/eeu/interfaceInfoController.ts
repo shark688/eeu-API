@@ -1,6 +1,6 @@
 // @ts-ignore
 /* eslint-disable */
-import {request} from '@umijs/max';
+import { request } from '@umijs/max';
 
 /** addInterfaceInfo POST /api/interfaceInfo/add */
 export async function addInterfaceInfoUsingPost(
@@ -68,6 +68,36 @@ export async function listInterfaceInfoByPageUsingPost(
   options?: { [key: string]: any },
 ) {
   return request<API.BaseResponsePageInterfaceInfo_>('/api/interfaceInfo/list/page', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** offlineInterfaceInfo POST /api/interfaceInfo/offline */
+export async function offlineInterfaceInfoUsingPost(
+  body: API.IdRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponseBoolean_>('/api/interfaceInfo/offline', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** onlineInterfaceInfo POST /api/interfaceInfo/online */
+export async function onlineInterfaceInfoUsingPost(
+  body: API.IdRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponseBoolean_>('/api/interfaceInfo/online', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

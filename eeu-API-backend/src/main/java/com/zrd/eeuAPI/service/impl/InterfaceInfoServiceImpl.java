@@ -1,9 +1,6 @@
 package com.zrd.eeuAPI.service.impl;
-import java.util.Date;
 
-import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zrd.eeuAPI.common.ErrorCode;
 import com.zrd.eeuAPI.constant.CommonConstant;
@@ -11,32 +8,17 @@ import com.zrd.eeuAPI.exception.BusinessException;
 import com.zrd.eeuAPI.exception.ThrowUtils;
 import com.zrd.eeuAPI.mapper.InterfaceInfoMapper;
 import com.zrd.eeuAPI.model.dto.interfaceInfo.InterfaceInfoQueryRequest;
-import com.zrd.eeuAPI.model.entity.*;
-import com.zrd.eeuAPI.model.vo.InterfaceInfoVO;
-import com.zrd.eeuAPI.model.vo.PostVO;
-import com.zrd.eeuAPI.model.vo.UserVO;
+import com.zrd.eeuAPI.model.entity.InterfaceInfo;
 import com.zrd.eeuAPI.service.InterfaceInfoService;
 import com.zrd.eeuAPI.service.UserService;
 import com.zrd.eeuAPI.utils.SqlUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.sort.SortBuilder;
-import org.elasticsearch.search.sort.SortBuilders;
-import org.elasticsearch.search.sort.SortOrder;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.elasticsearch.core.SearchHit;
-import org.springframework.data.elasticsearch.core.SearchHits;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import java.util.*;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
 * @author 张瑞东

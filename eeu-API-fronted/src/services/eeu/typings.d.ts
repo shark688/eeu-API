@@ -5,12 +5,6 @@ declare namespace API {
     message?: string;
   };
 
-  type BaseResponseInt_ = {
-    code?: number;
-    data?: number;
-    message?: string;
-  };
-
   type BaseResponseInterfaceInfoVO_ = {
     code?: number;
     data?: InterfaceInfoVO;
@@ -83,17 +77,6 @@ declare namespace API {
     message?: string;
   };
 
-  type checkUsingGETParams = {
-    /** echostr */
-    echostr?: string;
-    /** nonce */
-    nonce?: string;
-    /** signature */
-    signature?: string;
-    /** timestamp */
-    timestamp?: string;
-  };
-
   type DeleteRequest = {
     id?: number;
   };
@@ -115,6 +98,10 @@ declare namespace API {
 
   type getUserVOByIdUsingGETParams = {
     /** id */
+    id?: number;
+  };
+
+  type IdRequest = {
     id?: number;
   };
 
@@ -298,19 +285,6 @@ declare namespace API {
     title?: string;
   };
 
-  type PostFavourAddRequest = {
-    postId?: number;
-  };
-
-  type PostFavourQueryRequest = {
-    current?: number;
-    pageSize?: number;
-    postQueryRequest?: PostQueryRequest;
-    sortField?: string;
-    sortOrder?: string;
-    userId?: number;
-  };
-
   type PostQueryRequest = {
     content?: string;
     current?: number;
@@ -325,10 +299,6 @@ declare namespace API {
     tags?: string[];
     title?: string;
     userId?: number;
-  };
-
-  type PostThumbAddRequest = {
-    postId?: number;
   };
 
   type PostUpdateRequest = {
@@ -358,11 +328,11 @@ declare namespace API {
   };
 
   type User = {
+    accessKey?: string;
     createTime?: string;
     id?: number;
     isDelete?: number;
-    mpOpenId?: string;
-    unionId?: string;
+    secretKey?: string;
     updateTime?: string;
     userAccount?: string;
     userAvatar?: string;

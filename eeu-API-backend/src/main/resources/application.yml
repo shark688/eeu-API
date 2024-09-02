@@ -101,3 +101,7 @@ knife4j:
         api-rule: package
         api-rule-resources:
           - com.zrd.eeuAPI.controller
+zrd:
+  client:
+    access-key: zrd
+    secret-key: zrd

@@ -1,12 +1,8 @@
 package com.zrd.eeuAPI.controller;
 
-import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zrd.eeuAPI.annotation.AuthCheck;
-import com.zrd.eeuAPI.common.BaseResponse;
-import com.zrd.eeuAPI.common.DeleteRequest;
-import com.zrd.eeuAPI.common.ErrorCode;
-import com.zrd.eeuAPI.common.ResultUtils;
+import com.zrd.eeuAPI.common.*;
 import com.zrd.eeuAPI.constant.UserConstant;
 import com.zrd.eeuAPI.exception.BusinessException;
 import com.zrd.eeuAPI.exception.ThrowUtils;
@@ -16,19 +12,21 @@ import com.zrd.eeuAPI.model.dto.interfaceInfo.InterfaceInfoQueryRequest;
 import com.zrd.eeuAPI.model.dto.interfaceInfo.InterfaceInfoUpdateRequest;
 import com.zrd.eeuAPI.model.entity.InterfaceInfo;
 import com.zrd.eeuAPI.model.entity.User;
+import com.zrd.eeuAPI.model.enums.InterfaceInfoStatusEnum;
 import com.zrd.eeuAPI.model.vo.InterfaceInfoVO;
 import com.zrd.eeuAPI.service.InterfaceInfoService;
 import com.zrd.eeuAPI.service.UserService;
+import com.zrd.eeuapisdk.client.EeuClient;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 /**
- * 帖子接口
+ * 接口管理
  *
  * @author zrd
  *
@@ -43,6 +41,9 @@ public class InterfaceInfoController {
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private EeuClient eeuClient;
 
     // region 增删改查
 
@@ -97,30 +98,6 @@ public class InterfaceInfoController {
     }
 
     /**
-     * 更新（仅管理员）
-     *
-     * @param interfaceInfoUpdateRequest
-     * @return
-     */
-    @PostMapping("/update")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Boolean> updateInterfaceInfo(@RequestBody InterfaceInfoUpdateRequest interfaceInfoUpdateRequest) {
-        if (interfaceInfoUpdateRequest == null || interfaceInfoUpdateRequest.getId() <= 0) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-        InterfaceInfo interfaceInfo = new InterfaceInfo();
-        BeanUtils.copyProperties(interfaceInfoUpdateRequest, interfaceInfo);
-        // 参数校验
-        interfaceInfoService.validInterfaceInfo(interfaceInfo, false);
-        long id = interfaceInfoUpdateRequest.getId();
-        // 判断是否存在
-        InterfaceInfo oldInterfaceInfo = interfaceInfoService.getById(id);
-        ThrowUtils.throwIf(oldInterfaceInfo == null, ErrorCode.NOT_FOUND_ERROR);
-        boolean result = interfaceInfoService.updateById(interfaceInfo);
-        return ResultUtils.success(result);
-    }
-
-    /**
      * 根据 id 获取
      *
      * @param id
@@ -136,22 +113,6 @@ public class InterfaceInfoController {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
         }
         return ResultUtils.success(InterfaceInfoVO.objToVo(interfaceInfo));
-    }
-
-    /**
-     * 分页获取列表（仅管理员）
-     *
-     * @param interfaceInfoQueryRequest
-     * @return
-     */
-    @PostMapping("/list/page")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Page<InterfaceInfo>> listInterfaceInfoByPage(@RequestBody InterfaceInfoQueryRequest interfaceInfoQueryRequest) {
-        long current = interfaceInfoQueryRequest.getCurrent();
-        long size = interfaceInfoQueryRequest.getPageSize();
-        Page<InterfaceInfo> interfaceInfoPage = interfaceInfoService.page(new Page<>(current, size),
-                interfaceInfoService.getQueryWrapper(interfaceInfoQueryRequest));
-        return ResultUtils.success(interfaceInfoPage);
     }
 
 
@@ -184,4 +145,104 @@ public class InterfaceInfoController {
         return ResultUtils.success(result);
     }
 
+    /**
+     * 发布（仅管理员）
+     *
+     * @param idRequest
+     * @return
+     */
+    @PostMapping("/online")
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    public BaseResponse<Boolean> onlineInterfaceInfo(@RequestBody IdRequest idRequest) {
+        //1.id是否为空
+        if(idRequest == null || idRequest.getId() <= 0)
+        {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        //2.id在数据库中是否存在
+        long id = idRequest.getId();
+        InterfaceInfo oldInterfaceInfo = interfaceInfoService.getById(id);
+        ThrowUtils.throwIf(oldInterfaceInfo == null, ErrorCode.NOT_FOUND_ERROR);
+        //3.发送请求查看是否有效
+        com.zrd.eeuapisdk.model.User user = new com.zrd.eeuapisdk.model.User();
+        user.setUsername("zrd");
+        String usernameByPOST = eeuClient.getUsernameByPOST(user);
+        if(StringUtils.isBlank(usernameByPOST))
+        {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR,"接口异常无法调用");
+        }
+        //4.修改状态
+        InterfaceInfo interfaceInfo = new InterfaceInfo();
+        interfaceInfo.setId(id);
+        interfaceInfo.setStatus(InterfaceInfoStatusEnum.ONLINE.getValue());
+        boolean result = interfaceInfoService.updateById(interfaceInfo);
+        return ResultUtils.success(result);
+    }
+
+    /**
+     * 下线（仅管理员）
+     *
+     * @param idRequest
+     * @return
+     */
+    @PostMapping("/offline")
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    public BaseResponse<Boolean> offlineInterfaceInfo(@RequestBody IdRequest idRequest) {
+        //1.id是否为空
+        if(idRequest == null || idRequest.getId() <= 0)
+        {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        //2.id在数据库中是否存在
+        long id = idRequest.getId();
+        InterfaceInfo oldInterfaceInfo = interfaceInfoService.getById(id);
+        ThrowUtils.throwIf(oldInterfaceInfo == null, ErrorCode.NOT_FOUND_ERROR);
+        //3.修改状态
+        InterfaceInfo interfaceInfo = new InterfaceInfo();
+        interfaceInfo.setId(id);
+        interfaceInfo.setStatus(InterfaceInfoStatusEnum.OFFLINE.getValue());
+        boolean result = interfaceInfoService.updateById(interfaceInfo);
+        return ResultUtils.success(result);
+    }
+
+
+    /**
+     * 分页获取列表（仅管理员）
+     *
+     * @param interfaceInfoQueryRequest
+     * @return
+     */
+    @PostMapping("/list/page")
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    public BaseResponse<Page<InterfaceInfo>> listInterfaceInfoByPage(@RequestBody InterfaceInfoQueryRequest interfaceInfoQueryRequest) {
+        long current = interfaceInfoQueryRequest.getCurrent();
+        long size = interfaceInfoQueryRequest.getPageSize();
+        Page<InterfaceInfo> interfaceInfoPage = interfaceInfoService.page(new Page<>(current, size),
+                interfaceInfoService.getQueryWrapper(interfaceInfoQueryRequest));
+        return ResultUtils.success(interfaceInfoPage);
+    }
+
+    /**
+     * 更新（仅管理员）
+     *
+     * @param interfaceInfoUpdateRequest
+     * @return
+     */
+    @PostMapping("/update")
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    public BaseResponse<Boolean> updateInterfaceInfo(@RequestBody InterfaceInfoUpdateRequest interfaceInfoUpdateRequest) {
+        if (interfaceInfoUpdateRequest == null || interfaceInfoUpdateRequest.getId() <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        InterfaceInfo interfaceInfo = new InterfaceInfo();
+        BeanUtils.copyProperties(interfaceInfoUpdateRequest, interfaceInfo);
+        // 参数校验
+        interfaceInfoService.validInterfaceInfo(interfaceInfo, false);
+        long id = interfaceInfoUpdateRequest.getId();
+        // 判断是否存在
+        InterfaceInfo oldInterfaceInfo = interfaceInfoService.getById(id);
+        ThrowUtils.throwIf(oldInterfaceInfo == null, ErrorCode.NOT_FOUND_ERROR);
+        boolean result = interfaceInfoService.updateById(interfaceInfo);
+        return ResultUtils.success(result);
+    }
 }

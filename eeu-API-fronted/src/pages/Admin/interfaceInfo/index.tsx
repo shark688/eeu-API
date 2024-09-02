@@ -16,10 +16,10 @@ import UpdateForm from './components/UpdateForm';
 import {
   addInterfaceInfoUsingPost,
   deleteInterfaceInfoUsingPost,
-  listInterfaceInfoByPageUsingPost,
+  listInterfaceInfoByPageUsingPost, offlineInterfaceInfoUsingPost, onlineInterfaceInfoUsingPost,
   updateInterfaceInfoUsingPost
 } from "@/services/eeu/interfaceInfoController";
-import CreateForm from "@/pages/interfaceInfo/components/CreateForm";
+import CreateForm from "@/pages/Admin/interfaceInfo/components/CreateForm";
 
 
 const TableList: React.FC = () => {
@@ -91,7 +91,7 @@ const TableList: React.FC = () => {
    *  Delete node
    * @zh-CN 删除节点
    *
-   * @param selectedRows
+   * @param record
    */
   const handleRemove = async (record: API.InterfaceInfo) => {
     const hide = message.loading('正在删除');
@@ -111,6 +111,53 @@ const TableList: React.FC = () => {
     }
   };
 
+  /**
+   *  Online node
+   * @zh-CN 上线接口
+   *
+   * @param record
+   */
+  const handleOnline = async (record: API.IdRequest) => {
+    const hide = message.loading('发布中');
+    if (!record) return true;
+    try {
+      await onlineInterfaceInfoUsingPost({
+        id: record.id
+      });
+      hide();
+      message.success('上线成功');
+      actionRef.current?.reload();
+      return true;
+    } catch (error: any) {
+      hide();
+      message.error('上线失败!'+error.message);
+      return false;
+    }
+  };
+
+  /**
+   *  Offline node
+   * @zh-CN 下线接口
+   *
+   * @param record
+   */
+  const handleOffline = async (record: API.IdRequest) => {
+    const hide = message.loading('下线中');
+    if (!record) return true;
+    try {
+      await offlineInterfaceInfoUsingPost({
+        id: record.id
+      });
+      hide();
+      message.success('下线成功');
+      actionRef.current?.reload();
+      return true;
+    } catch (error: any) {
+      hide();
+      message.error('下线失败!'+error.message);
+      return false;
+    }
+  };
   /**
    * @en-US International configuration
    * @zh-CN 国际化配置
@@ -195,8 +242,9 @@ const TableList: React.FC = () => {
       dataIndex: 'option',
       valueType: 'option',
       render: (_, record) => [
-        <a
+        <Button
           key="config"
+          type = "text"
           onClick={() => {
             handleUpdateModalOpen(true);
             console.log("record"+ record)
@@ -204,15 +252,36 @@ const TableList: React.FC = () => {
           }}
         >
           修改
-        </a>,
-        <a
+        </Button>,
+        record.status === 0 ? <Button
+          key="online"
+          type = "text"
+          onClick={() => {
+            handleOnline(record);
+          }}
+        >
+          上线
+        </Button> : null,
+        record.status === 1 ? <Button
+          type = "text"
+          danger
+          key="offline"
+          onClick={() => {
+            handleOffline(record);
+          }}
+        >
+          下线
+        </Button> : null,
+        <Button
+          type = "text"
+          danger
           key="config"
           onClick={() => {
-            handleRemove(record)
+              handleRemove(record)
           }}
         >
           删除
-        </a>
+        </Button>
       ],
     },
   ];
