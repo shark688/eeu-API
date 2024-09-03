@@ -1,15 +1,14 @@
 package com.zrd.eeuAPI.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.google.gson.Gson;
 import com.zrd.eeuAPI.annotation.AuthCheck;
 import com.zrd.eeuAPI.common.*;
 import com.zrd.eeuAPI.constant.UserConstant;
 import com.zrd.eeuAPI.exception.BusinessException;
 import com.zrd.eeuAPI.exception.ThrowUtils;
-import com.zrd.eeuAPI.model.dto.interfaceInfo.InterfaceInfoAddRequest;
-import com.zrd.eeuAPI.model.dto.interfaceInfo.InterfaceInfoEditRequest;
-import com.zrd.eeuAPI.model.dto.interfaceInfo.InterfaceInfoQueryRequest;
-import com.zrd.eeuAPI.model.dto.interfaceInfo.InterfaceInfoUpdateRequest;
+import com.zrd.eeuAPI.model.dto.interfaceInfo.*;
+import com.zrd.eeuAPI.model.dto.user.UserQueryRequest;
 import com.zrd.eeuAPI.model.entity.InterfaceInfo;
 import com.zrd.eeuAPI.model.entity.User;
 import com.zrd.eeuAPI.model.enums.InterfaceInfoStatusEnum;
@@ -155,8 +154,7 @@ public class InterfaceInfoController {
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> onlineInterfaceInfo(@RequestBody IdRequest idRequest) {
         //1.id是否为空
-        if(idRequest == null || idRequest.getId() <= 0)
-        {
+        if (idRequest == null || idRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         //2.id在数据库中是否存在
@@ -167,9 +165,8 @@ public class InterfaceInfoController {
         com.zrd.eeuapisdk.model.User user = new com.zrd.eeuapisdk.model.User();
         user.setUsername("zrd");
         String usernameByPOST = eeuClient.getUsernameByPOST(user);
-        if(StringUtils.isBlank(usernameByPOST))
-        {
-            throw new BusinessException(ErrorCode.SYSTEM_ERROR,"接口异常无法调用");
+        if (StringUtils.isBlank(usernameByPOST)) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "接口异常无法调用");
         }
         //4.修改状态
         InterfaceInfo interfaceInfo = new InterfaceInfo();
@@ -189,8 +186,7 @@ public class InterfaceInfoController {
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> offlineInterfaceInfo(@RequestBody IdRequest idRequest) {
         //1.id是否为空
-        if(idRequest == null || idRequest.getId() <= 0)
-        {
+        if (idRequest == null || idRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         //2.id在数据库中是否存在
@@ -244,5 +240,37 @@ public class InterfaceInfoController {
         ThrowUtils.throwIf(oldInterfaceInfo == null, ErrorCode.NOT_FOUND_ERROR);
         boolean result = interfaceInfoService.updateById(interfaceInfo);
         return ResultUtils.success(result);
+    }
+
+    /**
+     * 调用接口
+     *
+     * @param interfaceInfoInvokeRequest
+     * @param request
+     * @return
+     */
+    @PostMapping("/invoke")
+    public BaseResponse<Object> interfaceInvoke(@RequestBody InterfaceInfoInvokeRequest interfaceInfoInvokeRequest, HttpServletRequest request) {
+        if (interfaceInfoInvokeRequest == null || interfaceInfoInvokeRequest.getId() <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        Long id = interfaceInfoInvokeRequest.getId();
+        String userRequestParams = interfaceInfoInvokeRequest.getUserRequestParams();
+        InterfaceInfo oldInterfaceInfo = interfaceInfoService.getById(id);
+        if (oldInterfaceInfo == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+        }
+        if (oldInterfaceInfo.getStatus() != InterfaceInfoStatusEnum.ONLINE.getValue()) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "接口已关闭");
+        }
+        User loginUser = userService.getLoginUser(request);
+        String accessKey = loginUser.getAccessKey();
+        String secretKey = loginUser.getSecretKey();
+        EeuClient userClient = new EeuClient(accessKey,secretKey);
+        //TODO 应该是根据不同地址调用不同方法
+        Gson gson = new Gson();
+        com.zrd.eeuapisdk.model.User requestUser = gson.fromJson(userRequestParams, com.zrd.eeuapisdk.model.User.class);
+        String usernameByPOST = userClient.getUsernameByPOST(requestUser);
+        return ResultUtils.success(usernameByPOST);
     }
 }
