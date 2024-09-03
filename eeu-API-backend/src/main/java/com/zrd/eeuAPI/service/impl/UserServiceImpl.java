@@ -1,6 +1,7 @@
 package com.zrd.eeuAPI.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zrd.eeuAPI.common.ErrorCode;
@@ -69,11 +70,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             }
             // 2. 加密
             String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());
-            // 3. 插入数据
+            //3.生成accesskey和secretkey
+            String secretkey = org.apache.commons.codec.digest.DigestUtils.md5Hex(SALT+userAccount+ RandomUtil.randomNumbers(5));
+            String accesskey = org.apache.commons.codec.digest.DigestUtils.md5Hex(SALT+userAccount+ RandomUtil.randomNumbers(4));
+            // 4. 插入数据
             User user = new User();
             user.setUserAccount(userAccount);
             user.setUserPassword(encryptPassword);
-            //TODO 生成密钥
+            user.setAccessKey(accesskey);
+            user.setSecretKey(secretkey);
             boolean saveResult = this.save(user);
             if (!saveResult) {
                 throw new BusinessException(ErrorCode.SYSTEM_ERROR, "注册失败，数据库错误");
