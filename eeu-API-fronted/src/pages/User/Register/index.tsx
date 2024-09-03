@@ -1,14 +1,13 @@
 import {Footer} from '@/components';
 import {LockOutlined, UserOutlined,} from '@ant-design/icons';
 import {LoginForm, ProFormText,} from '@ant-design/pro-components';
-import {Helmet, history, useModel} from '@umijs/max';
+import {Helmet, history} from '@umijs/max';
 import {message, Tabs} from 'antd';
 import {createStyles} from 'antd-style';
 import React, {useState} from 'react';
-import {flushSync} from 'react-dom';
 import Settings from '../../../../config/defaultSettings';
 import {Link} from "@@/exports";
-import {getLoginUserUsingGet, userRegisterUsingPost} from "@/services/eeu/userController";
+import {userRegisterUsingPost} from "@/services/eeu/userController";
 
 const useStyles = createStyles(({token}) => {
   return {
@@ -49,22 +48,8 @@ const useStyles = createStyles(({token}) => {
 
 const Register: React.FC = () => {
   const [type, setType] = useState<string>('account');
-  const {initialState, setInitialState} = useModel('@@initialState');
   const {styles} = useStyles();
-  /**
-   * 登录成功后,返回用户信息
-   */
-  const fetchUserInfo = async () => {
-    const userInfo = await getLoginUserUsingGet();
-    if (userInfo) {
-      flushSync(() => {
-        setInitialState((s) => ({
-          ...s,
-          currentUser: userInfo,
-        }));
-      });
-    }
-  };
+
   const handleSubmit = async (values: API.UserRegisterRequest) => {
     try {
       // 注册
@@ -72,15 +57,12 @@ const Register: React.FC = () => {
       if (msg.code === 0) {
         const defaultRegisterSuccessMessage = '注册成功！';
         message.success(defaultRegisterSuccessMessage);
-        await fetchUserInfo();
-        const urlParams = new URL(window.location.href).searchParams;
-        history.push(urlParams.get('redirect') || '/');
         return;
       } else {
         message.error(msg.message);
       }
-    } catch (error) {
-      const defaultRegisterFailureMessage = '注册失败，请重试！';
+    } catch (error: any) {
+      const defaultRegisterFailureMessage = '注册失败，请重试！' + error.message;
       console.log(error);
       message.error(defaultRegisterFailureMessage);
     }
