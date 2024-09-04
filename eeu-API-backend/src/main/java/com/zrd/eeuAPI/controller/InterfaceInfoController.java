@@ -8,7 +8,6 @@ import com.zrd.eeuAPI.constant.UserConstant;
 import com.zrd.eeuAPI.exception.BusinessException;
 import com.zrd.eeuAPI.exception.ThrowUtils;
 import com.zrd.eeuAPI.model.dto.interfaceInfo.*;
-import com.zrd.eeuAPI.model.dto.user.UserQueryRequest;
 import com.zrd.eeuAPI.model.entity.InterfaceInfo;
 import com.zrd.eeuAPI.model.entity.User;
 import com.zrd.eeuAPI.model.enums.InterfaceInfoStatusEnum;
