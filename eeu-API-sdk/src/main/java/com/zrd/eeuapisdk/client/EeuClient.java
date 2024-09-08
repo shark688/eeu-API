@@ -22,6 +22,8 @@ public class EeuClient {
 
     private String secretKey;
 
+    public static final String EEU_API_GATEWAY_URL = "http://localhost:8090";
+
     public EeuClient(String accessKey, String secretKey) {
         this.accessKey = accessKey;
         this.secretKey = secretKey;
@@ -33,7 +35,7 @@ public class EeuClient {
         HashMap<String, Object> paramMap = new HashMap<>();
         paramMap.put("name", name);
 
-        String result= HttpUtil.get("http://localhost:8123/api/name/", paramMap);
+        String result= HttpUtil.get(EEU_API_GATEWAY_URL + "/api/name", paramMap);
         System.out.println(result);
         return result;
     }
@@ -44,7 +46,7 @@ public class EeuClient {
         HashMap<String, Object> paramMap = new HashMap();
         paramMap.put("name", name);
 
-        String result= HttpUtil.post("http://localhost:8123/api/name/", paramMap);
+        String result= HttpUtil.post(EEU_API_GATEWAY_URL + "/api/name", paramMap);
         System.out.println(result);
         return result;
     }
@@ -53,7 +55,7 @@ public class EeuClient {
     {
         //可以单独传入http参数，这样参数会自动做URL编码，拼接在URL中
         String json = JSONUtil.toJsonStr(user);
-        String result = HttpRequest.post("http://localhost:8123/api/name/user/")
+        String result = HttpRequest.post(EEU_API_GATEWAY_URL+"/api/name/user")
                 .addHeaders(getHeaderMap(json))
                 .charset(StandardCharsets.UTF_8)
                 .body(json)
