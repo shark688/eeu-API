@@ -1,7 +1,7 @@
 package com.zrd.eeuAPI.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.zrd.eeuAPI.model.entity.InterfaceInfo;
+import com.zrd.common.model.entity.InterfaceInfo;
 
 /**
 * @author 张瑞东

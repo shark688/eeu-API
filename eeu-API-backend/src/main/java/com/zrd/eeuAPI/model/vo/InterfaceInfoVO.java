@@ -1,6 +1,6 @@
 package com.zrd.eeuAPI.model.vo;
 
-import com.zrd.eeuAPI.model.entity.InterfaceInfo;
+import com.zrd.common.model.entity.InterfaceInfo;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 

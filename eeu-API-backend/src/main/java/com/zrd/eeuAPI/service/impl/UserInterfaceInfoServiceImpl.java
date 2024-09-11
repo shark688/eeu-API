@@ -3,18 +3,15 @@ package com.zrd.eeuAPI.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zrd.common.model.dto.userInterfaceInfo.UserInterfaceInfoQueryRequest;
+import com.zrd.common.model.entity.UserInterfaceInfo;
+import com.zrd.common.service.InnerUserInterfaceInfoService;
 import com.zrd.eeuAPI.common.ErrorCode;
+import com.zrd.eeuAPI.constant.CommonConstant;
 import com.zrd.eeuAPI.exception.BusinessException;
-import com.zrd.eeuAPI.exception.ThrowUtils;
 import com.zrd.eeuAPI.mapper.UserInterfaceInfoMapper;
-import com.zrd.eeuAPI.model.dto.userInterfaceInfo.UserInterfaceInfoQueryRequest;
-import com.zrd.eeuAPI.model.entity.UserInterfaceInfo;
-import com.zrd.eeuAPI.service.UserInterfaceInfoService;
-import org.apache.commons.lang3.StringUtils;
+import com.zrd.eeuAPI.utils.SqlUtils;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
 * @author 张瑞东
@@ -23,7 +20,7 @@ import java.util.List;
 */
 @Service
 public class UserInterfaceInfoServiceImpl extends ServiceImpl<UserInterfaceInfoMapper, UserInterfaceInfo>
-    implements UserInterfaceInfoService {
+    implements InnerUserInterfaceInfoService {
 
     @Override
     public void validUserInterfaceInfo(UserInterfaceInfo userInterfaceInfo, boolean add) {
@@ -41,8 +38,6 @@ public class UserInterfaceInfoServiceImpl extends ServiceImpl<UserInterfaceInfoM
        {
            throw new BusinessException(ErrorCode.PARAMS_ERROR,"剩余次数不能修小于0");
        }
-
-
     }
 
     /**
@@ -69,9 +64,30 @@ public class UserInterfaceInfoServiceImpl extends ServiceImpl<UserInterfaceInfoM
     }
 
     @Override
-    public QueryWrapper<UserInterfaceInfo> getQueryWrapper(UserInterfaceInfoQueryRequest userInterfaceInfoQueryRequest) {
-        return null;
+    public QueryWrapper<UserInterfaceInfo> getQueryWrapper(UserInterfaceInfoQueryRequest interfaceInfoQueryRequest) {
+
+        QueryWrapper<UserInterfaceInfo> queryWrapper = new QueryWrapper<>();
+        if (interfaceInfoQueryRequest == null) {
+            return queryWrapper;
+        }
+
+        Long id = interfaceInfoQueryRequest.getId();
+        Long userId = interfaceInfoQueryRequest.getUserId();
+        Long interfaceInfoId = interfaceInfoQueryRequest.getInterfaceInfoId();
+        Long totalCalls = interfaceInfoQueryRequest.getTotalCalls();
+        Long leftCalls = interfaceInfoQueryRequest.getLeftCalls();
+        Integer status = interfaceInfoQueryRequest.getStatus();
+        int current = interfaceInfoQueryRequest.getCurrent();
+        int pageSize = interfaceInfoQueryRequest.getPageSize();
+        String sortField = interfaceInfoQueryRequest.getSortField();
+        String sortOrder = interfaceInfoQueryRequest.getSortOrder();
+
+        queryWrapper.orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(CommonConstant.SORT_ORDER_ASC),
+                sortField);
+        return queryWrapper;
     }
+
+
 }
 
 

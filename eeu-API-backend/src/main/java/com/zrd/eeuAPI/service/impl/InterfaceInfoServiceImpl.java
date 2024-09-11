@@ -2,13 +2,13 @@ package com.zrd.eeuAPI.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zrd.common.model.entity.InterfaceInfo;
 import com.zrd.eeuAPI.common.ErrorCode;
 import com.zrd.eeuAPI.constant.CommonConstant;
 import com.zrd.eeuAPI.exception.BusinessException;
 import com.zrd.eeuAPI.exception.ThrowUtils;
 import com.zrd.eeuAPI.mapper.InterfaceInfoMapper;
 import com.zrd.eeuAPI.model.dto.interfaceInfo.InterfaceInfoQueryRequest;
-import com.zrd.eeuAPI.model.entity.InterfaceInfo;
 import com.zrd.eeuAPI.service.InterfaceInfoService;
 import com.zrd.eeuAPI.service.UserService;
 import com.zrd.eeuAPI.utils.SqlUtils;

@@ -2,8 +2,8 @@ package com.zrd.eeuAPI.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zrd.common.model.entity.InterfaceInfo;
 import com.zrd.eeuAPI.model.dto.interfaceInfo.InterfaceInfoQueryRequest;
-import com.zrd.eeuAPI.model.entity.InterfaceInfo;
 
 /**
 * @author 张瑞东
@@ -15,6 +15,5 @@ public interface InterfaceInfoService extends IService<InterfaceInfo> {
     void validInterfaceInfo(InterfaceInfo interfaceInfo, boolean add);
 
     QueryWrapper<InterfaceInfo> getQueryWrapper(InterfaceInfoQueryRequest interfaceInfoQueryRequest);
-
 
 }

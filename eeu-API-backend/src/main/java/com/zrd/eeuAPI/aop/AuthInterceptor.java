@@ -1,9 +1,9 @@
 package com.zrd.eeuAPI.aop;
 
+import com.zrd.common.model.entity.User;
 import com.zrd.eeuAPI.annotation.AuthCheck;
 import com.zrd.eeuAPI.common.ErrorCode;
 import com.zrd.eeuAPI.exception.BusinessException;
-import com.zrd.eeuAPI.model.entity.User;
 import com.zrd.eeuAPI.model.enums.UserRoleEnum;
 import com.zrd.eeuAPI.service.UserService;
 import org.aspectj.lang.ProceedingJoinPoint;

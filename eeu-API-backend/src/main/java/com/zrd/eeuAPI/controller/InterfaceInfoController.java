@@ -2,14 +2,14 @@ package com.zrd.eeuAPI.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.gson.Gson;
+import com.zrd.common.model.entity.InterfaceInfo;
+import com.zrd.common.model.entity.User;
 import com.zrd.eeuAPI.annotation.AuthCheck;
 import com.zrd.eeuAPI.common.*;
 import com.zrd.eeuAPI.constant.UserConstant;
 import com.zrd.eeuAPI.exception.BusinessException;
 import com.zrd.eeuAPI.exception.ThrowUtils;
 import com.zrd.eeuAPI.model.dto.interfaceInfo.*;
-import com.zrd.eeuAPI.model.entity.InterfaceInfo;
-import com.zrd.eeuAPI.model.entity.User;
 import com.zrd.eeuAPI.model.enums.InterfaceInfoStatusEnum;
 import com.zrd.eeuAPI.model.vo.InterfaceInfoVO;
 import com.zrd.eeuAPI.service.InterfaceInfoService;

@@ -1,6 +1,7 @@
 package com.zrd.eeuAPI.controller;
 
 import cn.hutool.core.io.FileUtil;
+import com.zrd.common.model.entity.User;
 import com.zrd.eeuAPI.common.BaseResponse;
 import com.zrd.eeuAPI.common.ErrorCode;
 import com.zrd.eeuAPI.common.ResultUtils;
@@ -8,7 +9,6 @@ import com.zrd.eeuAPI.constant.FileConstant;
 import com.zrd.eeuAPI.exception.BusinessException;
 import com.zrd.eeuAPI.manager.CosManager;
 import com.zrd.eeuAPI.model.dto.file.UploadFileRequest;
-import com.zrd.eeuAPI.model.entity.User;
 import com.zrd.eeuAPI.model.enums.FileUploadBizEnum;
 import com.zrd.eeuAPI.service.UserService;
 import lombok.extern.slf4j.Slf4j;

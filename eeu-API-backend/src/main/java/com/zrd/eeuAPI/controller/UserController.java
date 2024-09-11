@@ -1,6 +1,7 @@
 package com.zrd.eeuAPI.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.zrd.common.model.entity.User;
 import com.zrd.eeuAPI.annotation.AuthCheck;
 import com.zrd.eeuAPI.common.BaseResponse;
 import com.zrd.eeuAPI.common.DeleteRequest;
@@ -11,7 +12,6 @@ import com.zrd.eeuAPI.constant.UserConstant;
 import com.zrd.eeuAPI.exception.BusinessException;
 import com.zrd.eeuAPI.exception.ThrowUtils;
 import com.zrd.eeuAPI.model.dto.user.*;
-import com.zrd.eeuAPI.model.entity.User;
 import com.zrd.eeuAPI.model.vo.LoginUserVO;
 import com.zrd.eeuAPI.model.vo.UserVO;
 import com.zrd.eeuAPI.service.UserService;

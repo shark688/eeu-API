@@ -1,14 +1,10 @@
 package com.zrd.eeuAPI.model.vo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.zrd.eeuAPI.model.entity.InterfaceInfo;
-import com.zrd.eeuAPI.model.entity.UserInterfaceInfo;
+import com.zrd.common.model.entity.UserInterfaceInfo;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * 接口视图

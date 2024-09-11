@@ -2,8 +2,8 @@ package com.zrd.eeuAPI.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zrd.common.model.entity.User;
 import com.zrd.eeuAPI.model.dto.user.UserQueryRequest;
-import com.zrd.eeuAPI.model.entity.User;
 import com.zrd.eeuAPI.model.vo.LoginUserVO;
 import com.zrd.eeuAPI.model.vo.UserVO;
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
