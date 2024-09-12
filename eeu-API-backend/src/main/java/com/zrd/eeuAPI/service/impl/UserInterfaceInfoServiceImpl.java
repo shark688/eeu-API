@@ -5,11 +5,11 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zrd.common.model.dto.userInterfaceInfo.UserInterfaceInfoQueryRequest;
 import com.zrd.common.model.entity.UserInterfaceInfo;
-import com.zrd.common.service.InnerUserInterfaceInfoService;
 import com.zrd.eeuAPI.common.ErrorCode;
 import com.zrd.eeuAPI.constant.CommonConstant;
 import com.zrd.eeuAPI.exception.BusinessException;
 import com.zrd.eeuAPI.mapper.UserInterfaceInfoMapper;
+import com.zrd.eeuAPI.service.UserInterfaceInfoService;
 import com.zrd.eeuAPI.utils.SqlUtils;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 */
 @Service
 public class UserInterfaceInfoServiceImpl extends ServiceImpl<UserInterfaceInfoMapper, UserInterfaceInfo>
-    implements InnerUserInterfaceInfoService {
+    implements UserInterfaceInfoService {
 
     @Override
     public void validUserInterfaceInfo(UserInterfaceInfo userInterfaceInfo, boolean add) {

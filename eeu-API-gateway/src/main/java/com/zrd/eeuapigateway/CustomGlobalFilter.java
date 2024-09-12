@@ -1,7 +1,13 @@
 package com.zrd.eeuapigateway;
 
+import com.zrd.common.model.entity.InterfaceInfo;
+import com.zrd.common.model.entity.User;
+import com.zrd.common.service.InnerInterfaceInfoService;
+import com.zrd.common.service.InnerUserInterfaceInfoService;
+import com.zrd.common.service.InnerUserService;
 import com.zrd.eeuapisdk.util.SignUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.reactivestreams.Publisher;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
@@ -28,6 +34,15 @@ import java.util.List;
 @Component
 public class CustomGlobalFilter implements GlobalFilter, Ordered {
 
+    @DubboReference
+    private InnerUserInterfaceInfoService innerUserInterfaceInfoService;
+
+    @DubboReference
+    private InnerUserService innerUserService;
+
+    @DubboReference
+    private InnerInterfaceInfoService innerInterfaceInfoService;
+
     public static final List<String> IP_WHITE_LIST = Arrays.asList("127.0.0.1");
 
     /**
@@ -41,9 +56,11 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
         //1.请求日志
         ServerHttpRequest request = exchange.getRequest();
         ServerHttpResponse response = exchange.getResponse();
+        String path = request.getPath().value();
+        String method = request.getMethodValue().toString();
         log.info("请求唯一标识: " + request.getId());
-        log.info("请求路径: " + request.getPath().value());
-        log.info("请求方法: " + request.getMethodValue());
+        log.info("请求路径: " + path);
+        log.info("请求方法: " + method);
         log.info("请求参数: " + request.getQueryParams());
         String hostString = request.getLocalAddress().getHostString();
         log.info("请求来源地址: " + hostString);
@@ -61,13 +78,24 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
         String body = headers.getFirst("body");
         String timestamp = headers.getFirst("timestamp");
         String sign = headers.getFirst("sign");
-        //TODO 正常应该查询数据库是否有该Key
-        String accessKeyDb = "zrd";
-        String secretKey = "zrd";
-        if(!accessKey.equals(accessKeyDb))
+        //查询数据库是否有该Key
+        User invokeUser = null;
+        try{
+            invokeUser = innerUserService.getInvokeUser(accessKey);
+        }
+        catch (Exception e)
+        {
+            log.error("getInvokeUser error",e);
+        }
+        if(invokeUser == null)
         {
             return handleNoAuth(response);
         }
+        String secretKey = invokeUser.getSecretKey();
+//        if(!accessKey.equals(accessKeyDb))
+//        {
+//            return handleNoAuth(response);
+//        }
 
         if(Long.parseLong(nonce) > 10000)
         {
@@ -87,19 +115,29 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
             return handleNoAuth(response);
         }
 
-        if(!SignUtils.getSign(body,secretKey).equals(sign))
+        if(sign == null || !SignUtils.getSign(body,secretKey).equals(sign))
         {
             return handleNoAuth(response);
         }
         //4.请求接口是否存在
-        //TODO 查询数据库中是否含有对应的url,以及校验请求方法等
-
+        //查询数据库中是否含有对应的url,以及校验请求方法等
+        InterfaceInfo invokeInterface = null;
+        try{
+            invokeInterface = innerInterfaceInfoService.getInvokeInterface(path,method);
+        }catch (Exception e)
+        {
+            log.error("getInvokeInterface error",e);
+        }
+        if(invokeInterface == null)
+        {
+            return handleError(response);
+        }
         //5.请求转发,调用模拟接口
 //        Mono<Void> filter = chain.filter(exchange);
 
         //6.打印响应日志,调用次数+1
         log.info("响应结果为: " + response.getStatusCode());
-        return handleResponse(exchange,chain);
+        return handleResponse(exchange,chain,invokeUser.getId(),invokeInterface.getId());
     }
 
     @Override
@@ -126,7 +164,7 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
      * @param chain
      * @return
      */
-    public Mono<Void> handleResponse(ServerWebExchange exchange, GatewayFilterChain chain) {
+    public Mono<Void> handleResponse(ServerWebExchange exchange, GatewayFilterChain chain,long userId,long interfaceId) {
         try {
             // 获取原始的响应对象
             ServerHttpResponse originalResponse = exchange.getResponse();
@@ -152,7 +190,12 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
                             // 返回一个处理后的响应体
                             // (这里就理解为它在拼接字符串,它把缓冲区的数据取出来，一点一点拼接好)
                             return super.writeWith(fluxBody.map(dataBuffer -> {
-                                // TODO 调用成功后,调用接口来修改数据库调用次数+1 invokeCount
+                                //调用成功后,调用接口来修改数据库调用次数+1 invokeCount
+                                try {
+                                    boolean invoke = innerUserInterfaceInfoService.invoke(interfaceId, userId);
+                                } catch (Exception e) {
+                                   log.error("invoke error",e);
+                                }
                                 byte[] content = new byte[dataBuffer.readableByteCount()];
                                 dataBuffer.read(content);
                                 DataBufferUtils.release(dataBuffer);//释放掉内存

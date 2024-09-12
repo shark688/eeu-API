@@ -10,12 +10,11 @@ import com.zrd.common.model.entity.User;
  * @author zrd
  *
  */
-public interface InnerUserService extends IService<User> {
+public interface InnerUserService{
     /**
      * 根据密钥查询数据库是否有用户存在
      * @param accessKey
-     * @param secretKey
      * @return
      */
-    User getInvokeUser(String accessKey,String secretKey);
+    User getInvokeUser(String accessKey);
 }
