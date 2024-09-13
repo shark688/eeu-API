@@ -21,4 +21,9 @@
         totalCalls,leftCalls,status,
         createTime,updateTime,isDelete
     </sql>
+    <select id="listTopInvokeInterfaceInfo" resultType="com.zrd.common.model.entity.UserInterfaceInfo">
+        select interfaceInfoId, sum(totalCalls) as totalCalls from user_interface_info group by interfaceInfoId
+                                                          order by totalCalls desc limit #{limit};
+
+    </select>
 </mapper>

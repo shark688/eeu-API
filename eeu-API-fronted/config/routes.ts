@@ -14,6 +14,7 @@ export default [
     access: 'canAdmin',
     routes: [
       { name: '查询表格', icon: 'table', path: '/admin/interface_info', component: './Admin/InterfaceInfo' },
+      { name: '接口分析', icon: 'analysis', path: '/admin/interface_analysis', component: './Admin/InterfaceAnalysis' },
     ],
   },
   { path: '*', layout: false, component: './404' },

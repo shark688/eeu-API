@@ -45,6 +45,8 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
 
     public static final List<String> IP_WHITE_LIST = Arrays.asList("127.0.0.1");
 
+    public static final String INTERFACE_HOST = "http://localhost:8123";
+
     /**
      * 全局过滤
      * @param exchange
@@ -56,7 +58,7 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
         //1.请求日志
         ServerHttpRequest request = exchange.getRequest();
         ServerHttpResponse response = exchange.getResponse();
-        String path = request.getPath().value();
+        String path = INTERFACE_HOST + request.getPath().value();
         String method = request.getMethodValue().toString();
         log.info("请求唯一标识: " + request.getId());
         log.info("请求路径: " + path);
@@ -137,6 +139,7 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
 
         //6.打印响应日志,调用次数+1
         log.info("响应结果为: " + response.getStatusCode());
+        //TODO 校验用户是否还有该接口的调用次数
         return handleResponse(exchange,chain,invokeUser.getId(),invokeInterface.getId());
     }
 
