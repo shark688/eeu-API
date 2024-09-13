@@ -57,6 +57,7 @@ const Register: React.FC = () => {
       if (msg.code === 0) {
         const defaultRegisterSuccessMessage = '注册成功！';
         message.success(defaultRegisterSuccessMessage);
+        history.push('/user/login');
         return;
       } else {
         message.error(msg.message);
