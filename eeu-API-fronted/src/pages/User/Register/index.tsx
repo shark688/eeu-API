@@ -120,6 +120,20 @@ const Register: React.FC = () => {
                   size: 'large',
                   prefix: <UserOutlined/>,
                 }}
+                placeholder={'请输入账号'}
+                rules={[
+                  {
+                    required: true,
+                    message: '账户是必填项！',
+                  },
+                ]}
+              />
+              <ProFormText
+                name="userName"
+                fieldProps={{
+                  size: 'large',
+                  prefix: <UserOutlined/>,
+                }}
                 placeholder={'请输入用户名'}
                 rules={[
                   {
