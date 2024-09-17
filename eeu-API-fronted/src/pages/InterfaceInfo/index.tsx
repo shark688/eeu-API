@@ -16,6 +16,18 @@ const Index: React.FC = () => {
   const [responseData,  setResponseData] = useState<any>();
   const param = useParams();
 
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    // 使用Intl.DateTimeFormat进行国际化日期格式化
+    const formatter = new Intl.DateTimeFormat('zh-CN', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    });
+    return formatter.format(date); // 手动添加'日'字
+  }
+
+
 
   const loadData = async () => {
     setLoading(true);
@@ -75,8 +87,8 @@ const Index: React.FC = () => {
             <Descriptions.Item label="请求方法">{data.method}</Descriptions.Item>
             <Descriptions.Item label="请求头">{data.requestHeader}</Descriptions.Item>
             <Descriptions.Item label="响应头">{data.responseHeader}</Descriptions.Item>
-            <Descriptions.Item label="创建时间">{data.createTime}</Descriptions.Item>
-            <Descriptions.Item label="更新时间">{data.updateTime}</Descriptions.Item>
+            <Descriptions.Item label="创建时间">{formatDate(data.createTime)}</Descriptions.Item>
+            <Descriptions.Item label="更新时间">{formatDate(data.updateTime)}</Descriptions.Item>
           </Descriptions> : <>接口不存在</>
         }
       </Card>
